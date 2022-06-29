@@ -35,21 +35,24 @@ export const load_user = () => async dispatch => {
 };
 
 export const login = (email, password) => async dispatch => {
-    const config ={
-        headers:{
+    const config = {
+        headers: {
             'Content-Type': 'application/json'
         }
-    }
-    const body = JSON.stringify({email,password});
+    };
 
-    try{
-        const res = await axios.post('http://localhost:8000/auth/jwt/create/',body,config);
+    const body = JSON.stringify({ email, password });
+
+    try {
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/jwt/create/`, body, config);
+
         dispatch({
             type: LOGIN_SUCCESS,
             payload: res.data
         });
+
         dispatch(load_user());
-    } catch(err){
+    } catch (err) {
         dispatch({
             type: LOGIN_FAIL
         })

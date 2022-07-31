@@ -49,7 +49,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=150, blank=False)
     gender = models.CharField(max_length=1, choices=GENDER,default='M')
     about = models.TextField(_(
-        'about'), max_length=500, blank=True)
+        'about'), max_length=500, blank=False)
     image =  models.ImageField(
         verbose_name=_("image"),
         help_text=_("Upload a Profile image"),

@@ -1,12 +1,12 @@
 import React from "react";
 import { Container } from "react-bootstrap";
-import RegisterForm2 from "../../components/Account/RegisterForm2"; 
+import SignupForm from "../../components/Account/SignupForm";
 
 
 function Register() {
   return (
     <Container className="py-5 d-flex justify-content-center">
-      <RegisterForm2/>
+      <SignupForm/>
     </Container>
   );
 }

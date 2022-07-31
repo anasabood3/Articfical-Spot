@@ -10,7 +10,7 @@ import axios from "axios";
 import Animations from "../../components/Article/ArticleLoading";
 import { useEffect, useState } from "react";
 
-import axiosInstance from "../../components/Account/axios";
+
 
 
 function Feed() {
@@ -20,12 +20,11 @@ function Feed() {
 
 
   useEffect(() => {
-    axiosInstance
-      .get()
+    axios
+      .get("https://jsonplaceholder.typicode.com/posts")
       .then((res) => {
         setArticles(res.data);
         setLoaded(true);
-        console.log(res.data);
       })
       .catch((err) => {
        alert(err);
@@ -36,7 +35,7 @@ function Feed() {
     <Container fluid>
       <Row>
         <Col md={3}>
-          
+
           <div className="shadow-sm p-3 mb-5 bg-white rounded">
           <h4>Categories</h4>
             <Categories />
@@ -44,11 +43,11 @@ function Feed() {
         </Col>
 
         <Col md={6}>
-          {loaded?articles.map((article) => (
+          {/* {loaded?articles.map((article) => (
             <div className="p-3 mb-5 bg-white rounded">
-            <ArticleCard key={article.slug} article_data={article} />
+            <ArticleCard key={article.id} article_data={article} />
             </div>
-            )):<Animations/>}
+            )):<Animations/>} */}
         </Col>
 
         <Col md={3}>

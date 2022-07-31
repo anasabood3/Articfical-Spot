@@ -14,8 +14,8 @@ function Footer() {
         >
           <span className="navbar-brand">
             <img
-              alt=""
-              src="https://react-bootstrap.netlify.app/logo.svg"
+              alt="must be there"
+              src=""
               width="30"
               height="30"
               className="d-inline-block align-top"

@@ -1,71 +1,69 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {login} from '../../actions/auth';
+import { login } from "../../redux/auth";
+import { useFormik } from 'formik';
+import { LoginSchema } from "../../validations/FormValidations";
 
-function LoginForm({login}) {
 
-  let navigate = useNavigate();
+const initialValues = {
+  email: "",
+  password: ""
+}
 
-  const initialFormData = Object.freeze({
-    email: '',
-    password: '',
-  });
 
- 
+function LoginForm({ login, isAuthenticated}) {
 
-  const [formData, setFormData] = useState(initialFormData);
-  const { email, password } = formData;
- 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      // Trimming any whitespace
-      [e.target.name]: e.target.value.trim(),
-    });
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    login(email,password)
-  };
+    const formik = useFormik({
+      initialValues,
+      onSubmit: values => {
+      login(values.email,values.password);
+      },
+      validationSchema:LoginSchema
+      
+  })
 
-  // If user is athenticated then redirect him into home page
-
+if(isAuthenticated)
+  return <Navigate to="/"/>
+  
   return (
-    <Form>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" onChange={handleChange} value={email}name='email' required/>
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
+    <>
+    <Form onSubmit={formik.handleSubmit} noValidate={true}>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Email address</Form.Label>
+            <Form.Control type="email" placeholder="Enter email" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.email} name='email' required isInvalid={!!(formik.errors.email)&&formik.touched.email}/>
+            <Form.Control.Feedback type="invalid">
+                {formik.errors.email}
+            </Form.Control.Feedback>
+        </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control type="password"  placeholder="Password" onChange={handleChange} value={password} name='password' required />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label="Check me out" />
-      </Form.Group>
-      <Button variant="outline-dark" type="submit" onClick={handleSubmit}>
-        Login
-      </Button>
-      <p>Don't have an account <Link to="/register">Register</Link></p>
-      <p>Forgot my password (reset password component)</p>
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Password</Form.Label>
+            <Form.Control type="password" placeholder="Password" onChange={formik.handleChange} onBlur={formik.handleBlur}  value={formik.values.password} name='password' required isInvalid={!!(formik.errors.password && formik.touched.password)}/>
+            <Form.Control.Feedback type="invalid">
+                {formik.errors.password}
+            </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicCheckbox">
+            <Form.Check type="checkbox" label="Check me out" />
+        </Form.Group>
+        <Button variant="outline-dark" type="submit" >
+            Login
+        </Button>
+        <p>Don't have an account <Link to="/register">Register</Link></p>
+        <p>Forgot my password <Link to="/reset-password">Reset Password</Link></p>
     </Form>
- 
+
+</>
+
   );
 };
 
-const mapStateToProps = state => (
-  {
-    // is athenticated?
-  }
-)
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
 
-export default connect(null,{login})(LoginForm);
+export default connect(mapStateToProps, { login })(LoginForm);
